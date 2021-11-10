@@ -1,15 +1,90 @@
+import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import { Provider } from "react-redux";
+import thunk from 'redux-thunk';
+import store from "./redux/reducers"; 
+import userReducer from './redux/reducers/userReducer';
+import configReducer from './redux/reducers/configReducer';
+import { AUTH_IS_SUCCESS } from './redux/actions/userAction';
 
-describe("first render",() => {
-  test('renders learn react link', () => {
-    render(<App />);
-    const linkElement = screen.getByText(/learn react/i);
-    expect(linkElement).toBeInTheDocument();
+// get real redux store
+// https://reactjs.org/docs/test-renderer.html
+let myApp;
+let instance;
+beforeEach(() => {
+  myApp = renderer.create(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+  instance = myApp.root;
+});
+
+describe('My Connected React-Redux Component', () => {
+  test('should render with given default "user" state from Redux store', () => {
+    const getUserReducer = store.getState().user;
+    const setUserReducer = userReducer(undefined, {});
+    console.log(
+      "TEST_FIRST_RESULT",
+      {
+        json: myApp.toJSON(),
+        store: getUserReducer
+      }
+    );
+    expect(getUserReducer).toEqual(setUserReducer);
   });
-  test('renders some text',() => {
-    render(<App />);
-    const getText = screen.getByText(/Edit/i)
-    expect(getText).toBeInTheDocument();
+
+  test('should render with given default "config" state from Redux store', () => {
+    const getConfigReducer = store.getState().config;
+    const setConfigReducer = configReducer(undefined, {});
+    expect(getConfigReducer).toEqual(setConfigReducer);
+  });
+
+  test('should render with given state from Redux store match json snapshot', () => {
+    expect(myApp.toJSON()).toMatchSnapshot();
+  });
+
+  test('renders <img>',() => {
+    const getImage_Element = instance.findByType('img').props.className.includes("App-logo");
+    expect(getImage_Element).toBe(true);
+  });
+
+  test('renders <p>',() => {
+    const getP_Element = instance.findByType('p').children;
+    expect(getP_Element).toEqual(['Edit and save to reload.']);
+  });
+
+  test('renders learn react link',() => {
+    const getA_element = instance.findByProps({className: "App-link"}).children;
+    expect(getA_element).toEqual(['Learn React']);
+  });
+
+  test('renders <button>',() => {
+    const getButton_Element = instance.findByType('button').children;
+    expect(getButton_Element).toEqual(['click']);
+  });
+
+  it('should dispatch an action on button click "simulate user login"', () => {
+    renderer.act(() => {
+      instance.findByType('button').props.onClick();
+    });
+    
+    const getUpdateUserReducer = store.getState().user;
+    const expectedUserReducer = userReducer(undefined, {
+      type: AUTH_IS_SUCCESS,
+      payload: {
+        username: 'dummy'
+      }
+    });
+
+    console.log(
+      "TEST_LAST_RESULT",
+      {
+        json: myApp.toJSON(),
+        store: getUpdateUserReducer
+      }
+    );
+    expect(getUpdateUserReducer).toEqual(expectedUserReducer);
   })
-})
+});

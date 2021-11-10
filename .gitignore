@@ -6,6 +6,8 @@
 # Node artifact files
 node_modules/
 dist/
+coverage/
+__snapshots__/
 
 # Compiled Java class files
 *.class
