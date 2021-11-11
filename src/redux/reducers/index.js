@@ -1,12 +1,12 @@
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import userReducer from './userReducer';
-import configReducer from './configReducer';
+import dashboardReducer from './dashboardReducer';
 import { __ACCESS_CHECK, __LOGGER } from '../middleware';
 
-const reducers = combineReducers({
+export const reducers = combineReducers({
   user: userReducer,
-  config: configReducer
+  dashboard: dashboardReducer
 });
 
 const middleware = [ __ACCESS_CHECK, thunk, __LOGGER ];
@@ -17,5 +17,5 @@ const store = createStore(
     ? composeEnhancers(applyMiddleware(...middleware))
     : compose(applyMiddleware(...middleware))
 );
- console.log("REDUX", store)
+//  console.log("REDUX", store)
 export default store;
