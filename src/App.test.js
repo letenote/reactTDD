@@ -71,12 +71,13 @@ describe('My Connected React-Redux Component', () => {
     });
     
     const getUpdateUserReducer = store.getState().user;
-    const expectedUserReducer = userReducer(undefined, {
+    const expectedUserReducerByDispatch = userReducer(undefined, {
       type: AUTH_IS_SUCCESS,
       payload: {
         username: 'dummy'
       }
     });
+    const expectedUserReducerByHardcode = { authed: true, data: { username: 'dummy' }}
 
     console.log(
       "TEST_LAST_RESULT",
@@ -85,6 +86,7 @@ describe('My Connected React-Redux Component', () => {
         store: getUpdateUserReducer
       }
     );
-    expect(getUpdateUserReducer).toEqual(expectedUserReducer);
+    expect(getUpdateUserReducer).toEqual(expectedUserReducerByDispatch);
+    expect(getUpdateUserReducer).toEqual(expectedUserReducerByHardcode);
   })
 });
