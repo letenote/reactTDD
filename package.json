@@ -18,8 +18,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test_coverage": "rm -r coverage && rm -r src/__snapshots__ && npm test -- --coverage",
+    "test": "react-scripts test --coverage",
+    "test:coverage": "react-scripts test --coverage --watchAll",
+    "test:clean": "rm -r coverage && rm -r src/__snapshots__",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
