@@ -2,10 +2,9 @@ import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import { Provider } from "react-redux";
-import thunk from 'redux-thunk';
 import store from "./redux/reducers"; 
 import userReducer from './redux/reducers/userReducer';
-import configReducer from './redux/reducers/configReducer';
+import dashboardReducer from './redux/reducers/dashboardReducer';
 import { AUTH_IS_SUCCESS } from './redux/actions/userAction';
 
 // get real redux store
@@ -35,10 +34,10 @@ describe('My Connected React-Redux Component', () => {
     expect(getUserReducer).toEqual(setUserReducer);
   });
 
-  test('should render with given default "config" state from Redux store', () => {
-    const getConfigReducer = store.getState().config;
-    const setConfigReducer = configReducer(undefined, {});
-    expect(getConfigReducer).toEqual(setConfigReducer);
+  test('should render with given default "dashboard" state from Redux store', () => {
+    const getDashboardReducer = store.getState().dashboard;
+    const setDashboardReducer = dashboardReducer(undefined, {});
+    expect(getDashboardReducer).toEqual(setDashboardReducer);
   });
 
   test('should render with given state from Redux store match json snapshot', () => {
